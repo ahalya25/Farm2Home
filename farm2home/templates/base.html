@@ -303,7 +303,12 @@
                             <a href="{% url 'home' %}" class="nav-item nav-link ">Home</a>
                             {% endif %}
 
+                            <li class="nav-item dropdown">           
                             <a href="shop.html" class="nav-item nav-link">Farmer</a>
+                             <ul class="dropdown-menu border-0 p-3 rounded-0 shadow" aria-labelledby="pages">
+                             <li><a href="index.html" class="dropdown-item">Register </a></li>
+                             </ul>
+                             </li>
 
                             {% if page == 'login-page' %}
                             <a href="{% url 'login' %}" class="nav-item nav-link active">Login</a>

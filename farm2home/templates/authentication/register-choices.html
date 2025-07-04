@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+<div class="container vh-100 my-5 d-flex justify-content-center align-items-center">
+    <div class="card w-50 shadow p-4">
+        <form action="" method="POST">
+            {% csrf_token %}
+      <h5 class="mb-4 text-center">You are registering as?</h5>
+
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="role" id="consumer" value="consumer">
+        <label class="form-check-label" for="consumer">
+          Consumer
+        </label>
+      </div>
+
+      <div class="form-check mb-4">
+        <input class="form-check-input" type="radio" name="role" id="farmer" value="farmer">
+        <label class="form-check-label" for="farmer">
+          Farmer
+        </label>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-primary" type="submit">
+          Continue <i class="fas fa-arrow-right ms-2"></i>
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -53,21 +53,21 @@ class LogoutView(View):
       return redirect('product-list')
    
 
-#  class RegisterChoicesView(View):
+class RegisterChoicesView(View):
 
-#    def get(self,request,*args,**kwargs):
+   def get(self,request,*args,**kwargs):
 
-#       return render(request,'authentication/register-choice.html')  
+      return render(request,'authentication/register-choice.html')  
 
-#    # def post(self,request,*args,**kwargs):
+   def post(self,request,*args,**kwargs):
 
-   #    role = request.POST.get('role')
+      role = request.POST.get('role')
 
-   #    if role == 'farmer':
+      if role == 'farmer':
 
-   #       return redirect() 
+         return redirect('farmer-register') 
       
-   #    elif role == 'consumer':
+      elif role == 'consumer':
 
-   #       return redirect()
+         return redirect('consumer-register')
 
