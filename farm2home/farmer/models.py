@@ -13,11 +13,11 @@ class Farmer(BaseClass):
 
     location = models.CharField(max_length=30)
 
-    phone = models.TextField(max_length=10)
+    phone = models.CharField(max_length=10)
 
     def __str__(self):
 
-        return self.name
+        return self.farmer_name
     
     class Meta:
 

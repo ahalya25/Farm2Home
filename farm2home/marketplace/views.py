@@ -9,8 +9,9 @@ class ProductListView(View):
 
     def get(self,request,*args,**kwargs):
 
-
-        # product
+        product = Product.objects.all()
+        
+        data = {'product':product, 'page':'product-page'}
 
         return render(request,'marketplace/product-list.html')
 
@@ -22,7 +23,7 @@ class HomeView(View):
 
         return render(request,'marketplace/home.html',context=data)
     
-class PrductDetailView(View):
+class ProductDetailView(View):
 
     def get(self,request,*args,**kwargs):
 

@@ -44,9 +44,9 @@
           
            <div class="mb-3">
             <label for="courseCategory" class="form-label" >Address</label>
-            {{consumer_form.qualification}}
-            {% if consumer_form.qualication.errors %}
-            <p class="text-danger">{{consumer_form.qualification.errors | join:" "}}</p> 
+            {{consumer_form.address}}
+            {% if consumer_form.address.errors %}
+            <p class="text-danger">{{consumer_form.address.errors | join:" "}}</p> 
             {% endif %}
         </div>
 

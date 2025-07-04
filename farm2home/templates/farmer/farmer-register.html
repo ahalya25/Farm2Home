@@ -42,9 +42,9 @@
 
           <div class="col-md-6">
                      <label for="courseImage" class="form-label">Location</label> 
-                     {{farmer_form.last_name}}
-                     {% if farmer_form.last_name.errors %}
-                     <p class="text-danger">{{farmer_form.last_name.errors | join:" "}}</p> 
+                     {{farmer_form.location}}
+                     {% if farmer_form.location.errors %}
+                     <p class="text-danger">{{farmer_form.location.errors | join:" "}}</p> 
                      {% endif %}
             </div>
 
@@ -60,7 +60,7 @@
             <div class="col-md-6">
                      <label for="courseImage" class="form-label">Phone</label> 
                      {{farmer_form.phone}}
-                     {% if farmer_form.last_phone.errors %}
+                     {% if farmer_form.phone.errors %}
                      <p class="text-danger">{{farmer_form.phone.errors | join:" "}}</p> 
                      {% endif %}
             </div>
