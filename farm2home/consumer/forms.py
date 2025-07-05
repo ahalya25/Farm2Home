@@ -18,15 +18,18 @@ class ProfileForm(forms.ModelForm):
 
             'first_name' : forms.TextInput(attrs={
                                                      'class' : 'form-control',
-                                                     'required' : 'required'}),
+                                                     'required' : 'required',
+                                                      'placeholder': 'Enter first name'}),
 
             'last_name' : forms.TextInput(attrs={
                                                      'class' : 'form-control',
-                                                     'required' : 'required'}),   
+                                                     'required' : 'required',
+                                                      'placeholder': 'Enter last name'}),   
 
             'email' : forms.EmailInput(attrs={
                                                      'class' : 'form-control',
-                                                     'required' : 'required'}), 
+                                                     'required' : 'required',
+                                                      'placeholder': 'Enter valid mail-id'}), 
 
             'password' : forms.PasswordInput(attrs={
                                                      'class' : 'form-control',

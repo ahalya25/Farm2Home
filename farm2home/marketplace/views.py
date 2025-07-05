@@ -5,6 +5,17 @@ from django.views import View
 
 from .models import Product
 
+from .forms import ProductAddForm
+
+from farmer.models import Farmer
+
+from django.contrib.auth.decorators import login_required
+
+from django.utils.decorators import method_decorator
+
+from authentication.permissions import permission_roles
+
+
 class ProductListView(View):
 
     def get(self,request,*args,**kwargs):
@@ -13,7 +24,8 @@ class ProductListView(View):
         
         data = {'product':product, 'page':'product-page'}
 
-        return render(request,'marketplace/product-list.html')
+        return render(request,'marketplace/product-list.html',context=data)
+    
 
 class HomeView(View):
 
@@ -23,6 +35,42 @@ class HomeView(View):
 
         return render(request,'marketplace/home.html',context=data)
     
+
+    
+class ProductAddView(View):
+
+    def get(self,request,*args,**kwargs):
+
+        form = ProductAddForm()
+
+        data = {'form' : form }    
+
+        return render(request,'marketplace/product-add.html',context=data)
+    
+
+    def post(self,request,*args,**kwargs):      
+
+        form = ProductAddForm(request.POST,request.FILES)
+
+        farmer = Farmer.objects.get(id=1)
+
+        if form.is_valid():
+
+            product = form.save(commit=False)
+
+            product.farmer = farmer
+
+            product.save()
+
+            return redirect('product-list')
+        
+        data = {'form' : form }
+        
+        return render(request,'farmer/product-add.html',context=data)
+    
+
+        
+@method_decorator(login_required(login_url='login'),name='dispatch')  
 class ProductDetailView(View):
 
     def get(self,request,*args,**kwargs):
@@ -35,5 +83,7 @@ class ProductDetailView(View):
 
         data = {'product' : product }
 
-        return render(request,'marketplace/product-detail.html',context=data)     
+        return render(request,'marketplace/product-detail.html',context=data)    
+
+
         

@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-
 {% block section %}
+
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">Available Products</h2>
+    <h2 class="text-center mb-4">Available Fresh Products</h2>
+
     <div class="row">
         {% for product in products %}
         <div class="col-md-4 mb-4">
@@ -10,16 +11,27 @@
                 <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.product_name }}</h5>
-                    <p class="card-text">By {{ product.farmer_name.farmer_name }}</p>
-                    <p class="card-text">₹{{ product.price }} per kg</p>
-                    <p class="card-text">Freshness: {{ product.freshness }}</p>
-                    <a href="{% url 'product-detail' product.id %}" class="btn btn-success">View Details</a>
+                    <p class="card-text"><strong>Farmer:</strong> {{ product.farmer_name.farmer_name }}</p>
+                    {% if product.offer_price %}
+                        <p class="card-text">
+                            <strong>Offer Price:</strong> ₹{{ product.offer_price }} 
+                            <span class="text-muted text-decoration-line-through">₹{{ product.price }}</span>
+                        </p>
+                    {% else %}
+                        <p class="card-text"><strong>Price:</strong> ₹{{ product.price }}</p>
+                    {% endif %}
+                    <p class="card-text"><strong>Quantity:</strong> {{ product.quantity }} kg</p>
+                    <p class="card-text"><strong>Freshness:</strong> {{ product.freshness }}</p>
+                    <a href="{% url 'product-detail' product.id %}" class="btn btn-success btn-sm mt-2">View Details</a>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <p>No products available.</p>
+        <!-- {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-danger">No products available at the moment.</p>
+        </div> -->
         {% endfor %}
     </div>
 </div>
+
 {% endblock %}
