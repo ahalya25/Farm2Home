@@ -26,7 +26,8 @@ urlpatterns = [
     path('marketplace/',include('marketplace.urls')),
     path('authentication/',include('authentication.urls')),
     path('farmer/',include('farmer.urls')),
-    path('consumer/',include('consumer.urls'))
+    path('consumer/',include('consumer.urls')),
+    path('payments/',include('payments.urls'))
 ]
 
 urlpatterns+= static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

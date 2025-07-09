@@ -8,9 +8,17 @@ class FarmerForm(forms.ModelForm):
 
         model = Farmer
 
-        exclude = ['profile','farmer_name','uuid','active_status']  
+        exclude = ['profile','uuid','active_status']  
 
         widgets = {
+
+
+            'farmer_name': forms.TextInput(attrs={
+
+                                                     'class': 'form-control', 
+
+                                                    'placeholder': 'Enter name'}),
+
 
             
             'image': forms.FileInput(attrs={

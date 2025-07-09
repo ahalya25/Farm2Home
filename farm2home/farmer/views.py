@@ -20,7 +20,15 @@ from django.utils.decorators import method_decorator
 
 from authentication.permissions import permission_roles
 
+from django.db.models import Q
+
+from marketplace.models import Product
+
+from .models import Farmer
+
 import threading
+
+import uuid
 
 
 # Create your views here.
@@ -59,7 +67,7 @@ class FarmerRegisterView(View):
 
                 profile.username = email
 
-                profile.role = 'farmer'
+                profile.role = 'Farmer'
 
                 profile.password = make_password(password)
 
@@ -84,10 +92,11 @@ class FarmerRegisterView(View):
 
                     context = {'name': farmer.name,'username': farmer.profile.email,'password':password }
 
-                    # thread = threading.Thread(target=send_email,args=(subject,recipient,template,context))
+                    thread = threading.Thread(target=send_email,args=(subject,recipient,template,context))
 
-                    send_email(subject,recipient,template,context)
-                    # thread.start()
+                    # send_email(subject,recipient,template,context)
+
+                    thread.start()
 
                     return redirect('login')
             
@@ -95,6 +104,36 @@ class FarmerRegisterView(View):
 
             return render(request,'farmer/farmer-register.html',context=data)
         
+
+
+class FarmerProductListView(View):
+
+    def get(self, request, *args, **kwargs):
+
+        query = request.GET.get('query')
+        
+        farmer = Farmer.objects.get(profile=request.user) 
+
+        product = Product.objects.filter(farmer=farmer)
+
+       
+        # product = Product.objects.filter(farmer=farmer)
+
+        if query:
+
+            product = Product.objects.filter(Q(farmer=farmer) & (Q(product_name__icontains=query)|
+                                             Q(price__icontains=query)|
+                                             Q(offer_price__icontains=query)|
+                                             Q(quantity__icontains=query)|
+                                             Q(freshness__icontains=query)|
+                                             Q(created_at__icontains=query)))
+            
+        print(product)    
+                                             
+        
+        data = {'product': product, 'page' : 'farmer-product-page',query : query}
+
+        return render(request,'farmer/farmer-product-list.html', context=data)
 
         
 # @method_decorator(permission_roles(roles=['Farmer']),name='dispatch')
@@ -108,7 +147,7 @@ class FarmerProductDetailView(View):
 
         data = {'product' : product }
 
-        return render(request,'marketplace/farmer-product-detail.html',context=data) 
+        return render(request,'farmer/farmer-product-detail.html',context=data) 
     
 
 
@@ -121,11 +160,11 @@ class FarmerProductUpdateView(View):
 
         product = Product.objects.get(uuid=uuid)
 
-        form = ProductAddForm(farmer=product)
+        form = ProductAddForm(instance=product)
 
         data = {'form' : form }
 
-        return render(request,'marketplace/farmer-product-update.html',context=data) 
+        return render(request,'farmer/farmer-product-update.html',context=data) 
 
     def post(self,request,*args,**kwargs) :
 
@@ -143,11 +182,10 @@ class FarmerProductUpdateView(View):
 
         data = {'form' : form }
 
-        return render(request,'marketplace/farmer-product-update.html',context = data)             
-        
-    
-    
-# @method_decorator(permission_roles(roles=['farmer']),name='dispatch')
+        return render(request,'farmer/farmer-product-update.html',context = data)             
+
+
+# # @method_decorator(permission_roles(roles=['farmer']),name='dispatch')
 class FarmerProductDeleteView(View):
 
     def get(self,request,*args,**kwargs):

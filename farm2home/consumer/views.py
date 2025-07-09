@@ -13,6 +13,8 @@ from farm2home.utility import send_email
 
 from django.contrib.auth.hashers import make_password
 
+import threading
+
 
 class ConsumerRegisterView(View):
 
@@ -48,7 +50,7 @@ class ConsumerRegisterView(View):
 
                 profile.username = email
 
-                profile.role = 'farmer'
+                profile.role = 'Consumer'
 
                 profile.password = make_password(password)
 
@@ -73,10 +75,11 @@ class ConsumerRegisterView(View):
 
                     context = {'name': consumer.name,'username': consumer.profile.email,'password':password }
 
-                    # thread = threading.Thread(target=send_email,args=(subject,recipient,template,context))
+                    thread = threading.Thread(target=send_email,args=(subject,recipient,template,context))
 
                     send_email(subject,recipient,template,context)
-                    # thread.start()
+                    
+                    thread.start()
 
                     return redirect('login')
             

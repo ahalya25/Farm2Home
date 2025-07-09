@@ -46,7 +46,7 @@ class Product(BaseClass):
 
     def __str__(self):
 
-        return f"{self.product_name} - {self.freshness}"
+        return f"{self.product_name} - {self.farmer}"
     
     class Meta:
 

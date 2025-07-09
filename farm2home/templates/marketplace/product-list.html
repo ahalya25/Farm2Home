@@ -8,28 +8,48 @@
         {% for product in products %}
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}" style="height: 250px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.product_name }}</h5>
-                    <p class="card-text"><strong>Farmer:</strong> {{ product.farmer_name.farmer_name }}</p>
+                    <p class="card-text"><strong>Farmer:</strong> {{ product.farmer_name }}</p>
+
+                   
+                    <i class="fas fa-rupee-sign text-success me-2"></i><strong>Price:</strong>
                     {% if product.offer_price %}
-                        <p class="card-text">
-                            <strong>Offer Price:</strong> ₹{{ product.offer_price }} 
-                            <span class="text-muted text-decoration-line-through">₹{{ product.price }}</span>
-                        </p>
+                       
+                        <span class="text-muted text-decoration-line-through">₹{{ product.price }}</span>
+                         <span class="text-success fw-bold">₹{{ product.offer_price }}</span>
                     {% else %}
-                        <p class="card-text"><strong>Price:</strong> ₹{{ product.price }}</p>
+                        <span class="fw-bold">₹{{ product.price }}</span>
                     {% endif %}
+                    <span> per kg</span>
+                
+
                     <p class="card-text"><strong>Quantity:</strong> {{ product.quantity }} kg</p>
                     <p class="card-text"><strong>Freshness:</strong> {{ product.freshness }}</p>
-                    <a href="{% url 'product-detail' product.id %}" class="btn btn-success btn-sm mt-2">View Details</a>
+
+                    <a href="{% url 'product-detail' product.uuid %}" class="btn btn-success btn-sm mt-2">View Details</a>
+
+                    <!-- Add to Cart Button -->
+                      {% if not user.role == 'Farmer' %}
+                    <form method="post" action=" " class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Add to Cart</button>
+                    </form>
+                    {% endif %}
+                    
+                    
+                    
+
+                    
+
                 </div>
             </div>
         </div>
-        <!-- {% empty %}
+        {% empty %}
         <div class="col-12 text-center">
             <p class="text-danger">No products available at the moment.</p>
-        </div> -->
+        </div>
         {% endfor %}
     </div>
 </div>

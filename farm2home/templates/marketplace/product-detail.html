@@ -1,21 +1,63 @@
 {% extends 'base.html' %}
 {% block section %}
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6">
-            <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.product_name }}">
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Product Image -->
+        <div class="col-lg-6 text-center">
+            <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.product_name }}" style="max-height: 400px;">
         </div>
-        <div class="col-md-6">
-            <h2>{{ product.product_name }}</h2>
-            <p><strong>Farmer:</strong> {{ product.farmer_name.farmer_name }}</p>
-            <p><strong>Price:</strong> ₹{{ product.price }} per kg</p>
-            <p><strong>Offer Price:</strong> ₹{{ product.offer_price }} <span class="text-muted text-decoration-line-through">₹{{ product.price }}</span></p>
-            <p><strong>Quantity Available:</strong> {{ product.quantity }} kg</p>
-            <p><strong>Freshness:</strong> {{ product.freshness }}</p>
-            <p><strong>Listed on:</strong> {{ product.created_at|date:"M d, Y" }}</p>
-            <a href="{% url 'product-list' %}" class="btn btn-secondary mt-3">Back to Products</a>
+
+        <!-- Product Details -->
+        <div class="col-lg-6">
+            <h2 class="mb-3">{{ product.product_name }}</h2>
+
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item">
+                    <i class="fas fa-user text-success me-2"></i><strong>Farmer:</strong>{{ product.farmer.first_name }} {{ product.farmer.last_name }}
+                </li>
+
+                <!-- Price and Offer Price logic -->
+                <li class="list-group-item">
+                    <i class="fas fa-rupee-sign text-success me-2"></i><strong>Price:</strong>
+                    {% if product.offer_price %}
+                       
+                        <span class="text-muted text-decoration-line-through">₹{{ product.price }}</span>
+                         <span class="text-success fw-bold">₹{{ product.offer_price }}</span>
+                    {% else %}
+                        <span class="fw-bold">₹{{ product.price }}</span>
+                    {% endif %}
+                    <span> per kg</span>
+                </li>
+
+                <li class="list-group-item">
+                    <i class="fas fa-box text-success me-2"></i><strong>Quantity Available:</strong> {{ product.quantity }} kg
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-seedling text-success me-2"></i><strong>Freshness:</strong> {{ product.freshness }}
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-calendar-alt text-success me-2"></i><strong>Listed on:</strong> {{ product.created_at|date:"M d, Y" }}
+                </li>
+            </ul>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 mt-4">
+                <a href="{% url 'product-list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Products
+                </a>
+
+                {% if not user.role == 'Farmer' %}
+                <form method="post" action="{% url 'enroll-confirmation' product.uuid %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-shopping-cart me-1"></i>Buy Now
+                    </button>
+                </form>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

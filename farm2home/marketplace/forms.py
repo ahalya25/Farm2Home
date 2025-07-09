@@ -8,7 +8,9 @@ class ProductAddForm(forms.ModelForm):
 
         model = Product
 
-        fields = ['product_name', 'image', 'price', 'offer_price','quantity', 'freshness']
+        exclude = ['farmer','uuid','active_status']
+
+        # fields = ['product_name', 'image', 'price', 'offer_price','quantity', 'freshness']
 
         widgets ={
 
@@ -58,7 +60,7 @@ class ProductAddForm(forms.ModelForm):
         }                                                                                        
       
 
-        freshness = forms.ChoiceField (choices=Freshness_choices.choices,widget=forms.Select(attrs={
+    freshness = forms.ChoiceField (choices=Freshness_choices.choices,widget=forms.Select(attrs={
                                                                                      
                                                                                      'class':'form-select',
                                                                                      'required' : 'required'
