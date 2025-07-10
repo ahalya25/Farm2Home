@@ -48,13 +48,10 @@
                 </a>
 
                 {% if not user.role == 'Farmer' %}
-                <form method="post" action="{% url 'enroll-confirmation' product.uuid %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-warning">
-                        <i class="fas fa-shopping-cart me-1"></i>Buy Now
-                    </button>
-                </form>
+                <a href="{% url 'enroll-confirmation' product.uuid %}" class="btn btn-warning">
+                    <i class="fas fa-shopping-cart me-1"></i>Buy Now</a>
                 {% endif %}
+                
             </div>
         </div>
     </div>

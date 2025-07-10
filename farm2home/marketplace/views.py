@@ -29,6 +29,8 @@ class ProductListView(View):
         if query:
             
             product = Product.objects.filter(
+                
+                Q(farmer__farmer_name__icontains=query)|
                 Q(product_name__icontains=query) |
                 Q(price__icontains=query) |
                 Q(quantity__icontains=query) |
@@ -38,7 +40,7 @@ class ProductListView(View):
 
         data = {'products': product, 'page': 'product-page', 'query': query}
 
-        return render(request, 'marketplace/product-list.html', context=data)
+        return render(request,'marketplace/product-list.html', context=data)
 
 class HomeView(View):
 

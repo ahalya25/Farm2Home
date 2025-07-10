@@ -1,4 +1,4 @@
-<!-- {% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block section %}
 
@@ -14,7 +14,7 @@
         "handler": function (response){
             var form = document.createElement("form");
             form.method = "POST";
-            form.action = "{% url 'verify-payment' %} ";
+            form.action = "{% url 'payment-verify' %}";
 
             var csrfToken = '{{ csrf_token }}';
 
@@ -43,4 +43,4 @@
     rzp1.open();
 </script>
 
-{% endblock %} -->
+{% endblock %}

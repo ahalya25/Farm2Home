@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 import uuid
 
+
 class BaseClass(models.Model):
 
     uuid = models.SlugField(unique=True,default=uuid.uuid4)
