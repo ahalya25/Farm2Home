@@ -11,8 +11,9 @@
                 <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}" style="height: 250px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.product_name }}</h5>
-                    <p class="card-text"><strong>Farmer:</strong> {{ product.farmer.farmer_name }}</p>
-
+                    <p class="card-text">
+  <strong>Farmer:</strong> {{ product.farmer.farmer_name }}
+</p>
                    
                     <i class="fas fa-rupee-sign text-success me-2"></i><strong>Price:</strong>
                     {% if product.offer_price %}
@@ -27,15 +28,19 @@
 
                     <p class="card-text"><strong>Quantity:</strong> {{ product.quantity }} kg</p>
                     <p class="card-text"><strong>Freshness:</strong> {{ product.freshness }}</p>
+                 
+                    <div class="d-flex justify-content-start gap-2 mt-2">
+                    <a href="{% url 'product-detail' product.uuid %}" class="btn btn-success btn-sm">
+                      View Details
+                     </a>
 
-                    <a href="{% url 'product-detail' product.uuid %}" class="btn btn-success btn-sm mt-2">View Details</a>
-
-                                         
-                     <!-- Add to Cart form -->
-                <form method="post" action="{% url 'cart' product.uuid %} ">
+                     <form method="post" action="{% url 'cart' product.uuid %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm mt-2">Add to Cart</button>
-                </form>
+                    <button type="submit" class="btn btn-primary btn-sm">  Add to Cart </button>
+  </form>
+</div>
+
+                
                     
                     
 

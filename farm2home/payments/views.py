@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.views import View
 from django.http import HttpResponseBadRequest
 from decouple import config
 import razorpay
 import datetime
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from marketplace.models import Product
 from consumer.models import Consumer
 from .models import Payments, Transactions
+from cart.models import Cart
 
 
 class EnrollConfirmationView(View):
@@ -107,7 +108,7 @@ class PaymentverifyView(View):
             payment.paid_at = datetime.datetime.now()
             payment.save()
 
-            return redirect('home')  # Redirect to a success or home page
+            return redirect('success')  # Redirect to a success or home page
 
         except Transactions.DoesNotExist:
             return HttpResponseBadRequest("Invalid transaction")
@@ -127,3 +128,6 @@ class PaymentverifyView(View):
 
             # Redirect back to Razorpay payment page to retry
             return redirect('razorpay-view', uuid=transaction.payment.product.uuid)
+        
+
+
