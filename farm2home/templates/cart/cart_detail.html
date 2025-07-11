@@ -47,11 +47,10 @@
             </tbody>
         </table>
 
-        <div class="text-end">
-            <a href=" " class="btn btn-primary">
-                <i class="fas fa-credit-card"></i> Buy Now
-            </a>
-        </div>
+        {% if not user.role == 'Farmer' %}
+                <a href="{% url 'enroll-confirmation' product.uuid %}" class="btn btn-warning">
+                    <i class="fas fa-shopping-cart me-1"></i>Buy Now</a>
+                {% endif %}
          
     {% else %}
         <p class="text-center text-muted">Your cart is empty.</p>

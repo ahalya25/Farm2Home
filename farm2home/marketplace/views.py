@@ -62,27 +62,35 @@ class ProductAddView(View):
 
         return render(request,'marketplace/product-add.html',context=data)
     
-
-    def post(self,request,*args,**kwargs):      
-
-        form = ProductAddForm(request.POST,request.FILES)
-
-        farmer = Farmer.objects.get(id=1)
-
-        if form.is_valid():
-
-            product = form.save(commit=False)
-
-            product.farmer = farmer
-
-            product.save()
-
-            return redirect('farmer-product-list')
-        
-        data = {'form' : form }
-        
-        return render(request,'marketplace/product-add.html',context=data)
     
+    def post(self, request, *args, **kwargs):
+     
+     form = ProductAddForm(request.POST, request.FILES)
+
+     if form.is_valid():
+        
+        product = form.save(commit=False)
+
+        try:
+            farmer = Farmer.objects.get(profile=request.user)
+
+        except Farmer.DoesNotExist:
+
+            return render(request, 'marketplace/product-add.html', {
+
+                'form': form,
+
+                'error': 'Farmer profile not found for the logged-in user.'
+            })
+
+        product.farmer = farmer
+        
+        product.save()
+
+        return redirect('farmer-product-list')
+
+     return render(request, 'marketplace/product-add.html', {'form': form})
+
 
         
 # @method_decorator(login_required(login_url='login'),name='dispatch')  
