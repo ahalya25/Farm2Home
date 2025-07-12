@@ -16,4 +16,7 @@ urlpatterns =[
         
         path('farmer-product-delete/<str:uuid>/',views.FarmerProductDeleteView.as_view(),name='farmer-product-delete'),
 
+        
 ]
+
+

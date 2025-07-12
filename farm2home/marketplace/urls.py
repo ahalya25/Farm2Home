@@ -9,7 +9,8 @@ urlpatterns =[
     
     path('home/',views.HomeView.as_view(),name='home'),
 
-    
+    path('farmer/upload-success/',views.upload_success,name='upload_success'),
+
     path('products/<uuid:uuid>/', views.ProductDetailView.as_view(), name='product-detail'),
 
     path('product-add/',views.ProductAddView.as_view(),name='product-add'),

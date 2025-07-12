@@ -23,13 +23,13 @@ class Freshness_choices(models.TextChoices):
 
     FRESH = 'Fresh', 'Fresh',
                          
-    MEDIUM = 'Medium', 'Medium',
+    MEDIUM = 'Moderate', 'Moderate',
 
-    SPOILED = 'Spoiled', 'Spoiled'     
+    SPOILED = 'Stale', 'Stale'     
 
 class Product(BaseClass):
 
-    farmer = models.ForeignKey('farmer.Farmer',on_delete=models.CASCADE)
+    farmer = models.ForeignKey('farmer.Farmer', on_delete=models.CASCADE)
 
     product_name = models.CharField(max_length=100)
 
@@ -37,11 +37,13 @@ class Product(BaseClass):
 
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
-    offer_price = models.DecimalField(max_digits=8,decimal_places=2,null=True,blank=True)
+    offer_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
     quantity = models.PositiveIntegerField()
 
     freshness = models.CharField(max_length=20, choices=Freshness_choices)
+
+    quality = models.CharField(max_length=20, blank=True)  # Add this field for AI prediction result
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -52,5 +54,5 @@ class Product(BaseClass):
     class Meta:
 
         verbose_name = 'Product'
-
+        
         verbose_name_plural = 'Product'

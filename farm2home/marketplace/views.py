@@ -11,11 +11,41 @@ from farmer.models import Farmer
 
 from django.db.models import Q
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required 
+
+from django.views.generic.edit import CreateView
 
 from django.utils.decorators import method_decorator
 
 from authentication.permissions import permission_roles
+
+from .forms import ProductAddForm
+
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+
+class FarmerQualityView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+
+    model = Product
+
+    form_class = ProductAddForm
+
+    template_name = 'farmer_upload.html'
+
+    success_url = '/farmer/upload-success/'  # You can customize this
+
+    def form_valid(self, form):
+
+        product = form.save(commit=False)
+        product.farmer = self.request.user.farmer  # Assuming request.user is linked to farmer
+        image_file = self.request.FILES['image']
+        product.quality = run_ai_quality_prediction(image_file)
+        product.save()
+        return super().form_valid(form)
+
+    def test_func(self):
+        return self.request.user.role == 'Farmer'
+
 
 
 class ProductListView(View):
@@ -106,7 +136,13 @@ class ProductDetailView(View):
 
         data = {'product' : product }
 
-        return render(request, 'marketplace/product-detail.html', context=data)    
+        return render(request, 'marketplace/product-detail.html', context=data)   
+
+
+
+def upload_success(request):
+      
+    return render(request, 'farmer/upload_success.html')     
 
 
 

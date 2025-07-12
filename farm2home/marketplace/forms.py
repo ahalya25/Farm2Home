@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Product , Freshness_choices
+from .models import Product 
 
 class ProductAddForm(forms.ModelForm):
 
@@ -8,7 +8,7 @@ class ProductAddForm(forms.ModelForm):
 
         model = Product
 
-        exclude = ['farmer','uuid','active_status']
+        exclude = ['farmer','uuid','active_status','freshness']
 
         # fields = ['product_name', 'image', 'price', 'offer_price','quantity', 'freshness']
 
@@ -59,9 +59,3 @@ class ProductAddForm(forms.ModelForm):
                                                  })  
         }                                                                                        
       
-
-    freshness = forms.ChoiceField (choices=Freshness_choices.choices,widget=forms.Select(attrs={
-                                                                                     
-                                                                                     'class':'form-select',
-                                                                                     'required' : 'required'
-                                                                                     })) 

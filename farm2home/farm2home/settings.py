@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'marketplace',
     'authentication',
     'payments',
-    'cart'
+    'cart',
+    'ai_quality',
 ]
 
 MIDDLEWARE = [

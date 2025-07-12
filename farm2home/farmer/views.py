@@ -30,7 +30,6 @@ import threading
 
 import uuid
 
-
 # Create your views here.
 class FarmerRegisterView(View):
 

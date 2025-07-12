@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block section %}
+<div class="container mt-5">
+    <h2>Check Product Quality (Test AI)</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="image">Upload Image:</label>
+            <input type="file" name="image" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Check Quality</button>
+    </form>
+
+    {% if result %}
+        <div class="alert alert-info mt-4">
+            <strong>Predicted Quality:</strong> {{ result }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -29,6 +29,8 @@ urlpatterns = [
     path('consumer/',include('consumer.urls')),
     path('payments/',include('payments.urls')),
     path('cart/', include('cart.urls')),
+    path('ai_quality/', include('ai_quality.urls')),
+
 
 ]
 
