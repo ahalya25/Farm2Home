@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block section %}
-<div class="container mt-5">
-    <div class="alert alert-success">
-        ✅ Your product was uploaded successfully!
-    </div>
+<div class="container mt-5 text-center">
+    <h2>✅ Product Uploaded Successfully!</h2>
+    <p>Your product has been added and quality prediction completed.</p>
+    <a href="{% url 'product-add' %}" class="btn btn-primary mt-3">Add Another Product</a>
+    <!-- <a href="{% url 'farmer-dashboard' %}" class="btn btn-secondary mt-3">Go to Dashboard</a> -->
 </div>
 {% endblock %}

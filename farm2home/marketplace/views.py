@@ -13,41 +13,18 @@ from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required 
 
-from django.views.generic.edit import CreateView
-
 from django.utils.decorators import method_decorator
 
 from authentication.permissions import permission_roles
 
 from .forms import ProductAddForm
+  
+from predict import predict_freshness  # import from predict.py
 
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-class FarmerQualityView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-
-    model = Product
-
-    form_class = ProductAddForm
-
-    template_name = 'farmer_upload.html'
-
-    success_url = '/farmer/upload-success/'  # You can customize this
-
-    def form_valid(self, form):
-
-        product = form.save(commit=False)
-        product.farmer = self.request.user.farmer  # Assuming request.user is linked to farmer
-        image_file = self.request.FILES['image']
-        product.quality = run_ai_quality_prediction(image_file)
-        product.save()
-        return super().form_valid(form)
-
-    def test_func(self):
-        return self.request.user.role == 'Farmer'
-
-
-
+from django.views.generic import CreateView
+ 
 class ProductListView(View):
 
     def get(self, request, *args, **kwargs):
@@ -80,46 +57,41 @@ class HomeView(View):
 
         return render(request,'marketplace/home.html',context=data)
     
+  # import your AI function at top of views.py
 
-@method_decorator(permission_roles(roles=['Farmer']),name='dispatch')    
+
+
+@method_decorator(permission_roles(roles=['Farmer']), name='dispatch')    
 class ProductAddView(View):
 
-    def get(self,request,*args,**kwargs):
-
+    def get(self, request, *args, **kwargs):
         form = ProductAddForm()
-
-        data = {'form' : form }    
-
-        return render(request,'marketplace/product-add.html',context=data)
-    
+        data = {'form': form}    
+        return render(request, 'marketplace/product-add.html', context=data)
     
     def post(self, request, *args, **kwargs):
-     
-     form = ProductAddForm(request.POST, request.FILES)
+        form = ProductAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            try:
+                farmer = Farmer.objects.get(profile=request.user)
+            except Farmer.DoesNotExist:
+                return render(request, 'marketplace/product-add.html', {
+                    'form': form,
+                    'error': 'Farmer profile not found for the logged-in user.'
+                })
+            product.farmer = farmer
 
-     if form.is_valid():
-        
-        product = form.save(commit=False)
+            # --- AI Prediction here ---
+            image = form.cleaned_data['image']
+            prediction = predict_freshness(image)  # your AI function
+            product.freshness = prediction
 
-        try:
-            farmer = Farmer.objects.get(profile=request.user)
+            product.save()
+            return redirect('farmer-product-list')
 
-        except Farmer.DoesNotExist:
+        return render(request, 'marketplace/product-add.html', {'form': form})
 
-            return render(request, 'marketplace/product-add.html', {
-
-                'form': form,
-
-                'error': 'Farmer profile not found for the logged-in user.'
-            })
-
-        product.farmer = farmer
-        
-        product.save()
-
-        return redirect('farmer-product-list')
-
-     return render(request, 'marketplace/product-add.html', {'form': form})
 
 
         

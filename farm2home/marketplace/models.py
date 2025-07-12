@@ -41,9 +41,9 @@ class Product(BaseClass):
 
     quantity = models.PositiveIntegerField()
 
-    freshness = models.CharField(max_length=20, choices=Freshness_choices)
-
-    quality = models.CharField(max_length=20, blank=True)  # Add this field for AI prediction result
+    freshness = models.CharField(max_length=20, blank=True, null=True)  # Set by AI
+    
+  # Add this field for AI prediction result
 
     created_at = models.DateTimeField(auto_now_add=True)
 
