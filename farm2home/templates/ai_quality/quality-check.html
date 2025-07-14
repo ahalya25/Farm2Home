@@ -1,0 +1,13 @@
+<!-- ai_quality/templates/ai_quality/quality_check.html -->
+
+<h2>Product Quality Check</h2>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Check Quality</button>
+</form>
+
+{% if result %}
+  <h3>Predicted Quality: {{ result }}</h3>
+{% endif %}

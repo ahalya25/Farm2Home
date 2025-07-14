@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'authentication',
     'payments',
     'cart',
+    'ai_quality',
     
 ]
 

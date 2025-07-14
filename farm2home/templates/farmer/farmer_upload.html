@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <label for="product_image">Upload Product Image:</label>
+  <input type="file" name="product_image" accept="image/*" required>
+  <button type="submit">Check Quality</button>
+</form>
 
-{% block section %}
-<div class="container mt-5">
-  <h2>Upload Product</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Submit</button>
-  </form>
-</div>
-{% endblock %}
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}

@@ -8,7 +8,7 @@
         </div>
         <div class="col-md-6">
             <h2>{{ product.product_name }}</h2>
-            <p><strong>Farmer:</strong> {{ product.farmer_name.farmer_name }}</p>
+            <p><strong>Farmer:</strong> {{ product.farmer.farmer_name }}</p>
             <p><strong>Price:</strong> ₹{{ product.price }} per kg</p>
             <p><strong>Offer Price:</strong> ₹{{ product.offer_price }} <span class="text-muted text-decoration-line-through">₹{{ product.price }}</span></p>
             <p><strong>Quantity Available:</strong> {{ product.quantity }} kg</p>

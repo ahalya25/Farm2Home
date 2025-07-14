@@ -1,10 +1,3 @@
-{% extends 'base.html' %}
-
-{% block section %}
-<div class="container mt-5 text-center">
-    <h2>✅ Product Uploaded Successfully!</h2>
-    <p>Your product has been added and quality prediction completed.</p>
-    <a href="{% url 'product-add' %}" class="btn btn-primary mt-3">Add Another Product</a>
-    <!-- <a href="{% url 'farmer-dashboard' %}" class="btn btn-secondary mt-3">Go to Dashboard</a> -->
-</div>
-{% endblock %}
+<h2>AI Prediction Result</h2>
+<p>Product Quality: <strong>{{ result }}</strong></p>
+<a href="{% url 'quality-check' %}">Check Another Product</a>
