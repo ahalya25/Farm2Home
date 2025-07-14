@@ -63,7 +63,7 @@ class ConsumerRegisterView(View):
 
                     consumer.profile = profile
 
-                    consumer.name = f'{profile.first_name} {profile.last_name}'
+                    consumer.consumer_name = f'{profile.first_name} {profile.last_name}'
 
                     consumer.save()
 
@@ -73,7 +73,7 @@ class ConsumerRegisterView(View):
 
                     template = 'email/success-registertion.html'
 
-                    context = {'name': consumer.name,'username': consumer.profile.email,'password':password }
+                    context = {'name': consumer.consumer_name, 'username': consumer.profile.email, 'password': password}
 
                     thread = threading.Thread(target=send_email,args=(subject,recipient,template,context))
 
@@ -83,8 +83,7 @@ class ConsumerRegisterView(View):
 
                     return redirect('login')
             
-            data = {'profile_form' : profile_form, 'farmer_form': consumer_form}
+            data = {'profile_form' : profile_form, 'consumer_form': consumer_form}
 
             return render(request,'consumer/consumer-register.html',context=data)
-    
     

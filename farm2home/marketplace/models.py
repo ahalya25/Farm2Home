@@ -23,9 +23,9 @@ class Freshness_choices(models.TextChoices):
 
     FRESH = 'Fresh', 'Fresh',
                          
-    MEDIUM = 'Moderate', 'Moderate',
+    MODERATE = 'Moderate', 'Moderate',
 
-    SPOILED = 'Stale', 'Stale'     
+    STALE = 'Stale', 'Stale'     
 
 class Product(BaseClass):
 
