@@ -6,7 +6,11 @@ from consumer.models import Consumer
 
 from marketplace.models import Product
 
+import uuid
+
 class Cart(models.Model):
+
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     user = models.ForeignKey(Consumer, on_delete=models.CASCADE)
 

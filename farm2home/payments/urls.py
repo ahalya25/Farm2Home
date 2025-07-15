@@ -1,13 +1,9 @@
 from django.urls import path
+from . import views
 
-from .import views
-
-from uuid import UUID
-urlpatterns =[
-
-    path('enroll-confirmation/<str:uuid>/',views.EnrollConfirmationView.as_view(),name='enroll-confirmation'),
-    path('razorpay-view/<str:uuid>/', views.RazorpayView.as_view(),name= 'razorpay-view'),
+urlpatterns = [
+    path('enroll-confirmation/<uuid:uuid>/', views.EnrollConfirmationView.as_view(), name='enroll-confirmation'),
+    path('razorpay-view/<uuid:uuid>/', views.RazorpayView.as_view(), name='razorpay-view'),
     path('verify-payment/', views.PaymentverifyView.as_view(), name='payment-verify'),
-    path('cart-checkout/', views.CartCheckoutView.as_view(), name='cart-checkout'),
-   
+    path('checkout/', views.CartCheckoutView.as_view(), name='cart_check-out'),
 ]

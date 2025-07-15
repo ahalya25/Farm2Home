@@ -67,7 +67,7 @@ class ConsumerForm(forms.ModelForm):
 
         model = Consumer
 
-        exclude = ['profile','consumer_name','email','uuid','active_status']
+        exclude = ['profile','consumer_name','uuid','active_status','email']
 
         widgets = {
 
@@ -83,7 +83,8 @@ class ConsumerForm(forms.ModelForm):
                                                            
                                                            'class': 'form-control',
                                                             
-                                                           'placeholder': 'Enter 10-digit phone number'})
+                                                           'placeholder': 'Enter 10-digit phone number'}),
 
+                  
                                        
         }

@@ -63,6 +63,8 @@ class ConsumerRegisterView(View):
 
                     consumer.profile = profile
 
+                    consumer.email = profile.email
+
                     consumer.consumer_name = f'{profile.first_name} {profile.last_name}'
 
                     consumer.save()

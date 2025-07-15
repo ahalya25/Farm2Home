@@ -5,7 +5,7 @@ from consumer.models import Consumer
 from marketplace.models import Product
 from .models import Cart
 
-# ✅ Add to Cart View
+
 class AddToCartView(LoginRequiredMixin, View):
     def post(self, request, uuid, *args, **kwargs):
         product = get_object_or_404(Product, uuid=uuid)

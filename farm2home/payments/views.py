@@ -11,6 +11,9 @@ from .models import Payments, Transactions
 from cart.models import Cart
 from django.db.models import Sum # Import Sum for aggregation
 import logging 
+from django.urls import reverse
+from django.contrib import messages
+from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -41,12 +44,21 @@ class RazorpayView(View):
     """
 
     def get(self, request, *args, **kwargs):
-        uuid = kwargs.get('uuid')
-        product = Product.objects.get(uuid=uuid)
-        consumer = Consumer.objects.get(profile=request.user)
+        product_uuid = kwargs.get('uuid')
+        try:
+            product = Product.objects.get(uuid=product_uuid)
+        except Product.DoesNotExist:
+            raise Http404("Product not found")
 
-        # Get existing payment; fail if not exists
-        payment = Payments.objects.get(consumer=consumer, product=product)
+        try:
+            consumer = Consumer.objects.get(profile=request.user)
+        except Consumer.DoesNotExist:
+            raise Http404("Consumer not found")
+
+        try:
+            payment = Payments.objects.get(consumer=consumer, product=product)
+        except Payments.DoesNotExist:
+            raise Http404("Payment record not found")
 
         # Create a new transaction for this payment attempt
         transaction = Transactions.objects.create(payment=payment)
@@ -70,7 +82,7 @@ class RazorpayView(View):
             'rzp_order_id': rzp_order_id,
             'amount': int(payment.amount * 100),
             'product': product,
-            'payment': payment
+            'payment': payment,
         }
 
         return render(request, 'payments/payment-page.html', context)
@@ -131,88 +143,44 @@ class PaymentverifyView(View):
             return redirect('razorpay-view', uuid=transaction.payment.product.uuid)
         
 
+
+
 class CartCheckoutView(LoginRequiredMixin, View):
-    """
-    Handles the checkout process for all items in the user's cart.
-    Calculates total amount and initiates Razorpay order.
-    """
     def get(self, request, *args, **kwargs):
-        consumer = get_object_or_404(Consumer, profile=request.user)
-        
-        # --- FIX: Change 'consumer' to 'user' for Cart query ---
-        # Assuming request.user is the User/Profile object linked to Cart
-        cart_items = Cart.objects.filter(user=request.user).select_related('product') # Eagerly load product details
-
-        if not cart_items.exists():
-            messages.warning(request, 'Your cart is empty. Please add products before checking out.')
-            return redirect('product-list') # Redirect to product list if cart is empty
-
-        # Calculate total amount from cart items
-        total_cart_amount = sum(item.total_price for item in cart_items)
-        
-        if total_cart_amount <= 0:
-            messages.error(request, 'Cannot checkout with a zero or negative total amount.')
-            return redirect('cart-view')
-
-        # Create or get a Payment object for the entire cart
         try:
-            payment, created = Payments.objects.get_or_create(
-                consumer=consumer,
-                product=None, # Set product to None for cart-wide payment
-                status='Pending',
-                defaults={'amount': total_cart_amount}
-            )
-            # If payment already existed and was not pending, or amount changed, update it
-            if not created and payment.status == 'Pending':
-                payment.amount = total_cart_amount
-                payment.save()
-            elif not created and payment.status != 'Pending':
-                # If an old payment for this consumer (with product=None) is not pending,
-                # create a new one to avoid conflicts.
-                payment = Payments.objects.create(
-                    consumer=consumer,
-                    product=None,
-                    amount=total_cart_amount,
-                    status='Pending'
-                )
+            current_user = request.user
+            print("DEBUG: Logged-in user:", current_user)
+
+            # Step 1: Get Consumer object for this user
+            try:
+                current_consumer = Consumer.objects.get(profile=current_user)
+                print("DEBUG: Found consumer:", current_consumer)
+            except Consumer.DoesNotExist:
+                messages.error(request, "You must register as a consumer to continue.")
+                print("DEBUG: Consumer does not exist.")
+                return redirect('consumer-register')
+
+            # Step 2: Get cart items for this consumer
+            cart_items = Cart.objects.filter(user=current_consumer)
+            print("DEBUG: Cart items found:", cart_items.count())
+
+            if not cart_items.exists():
+                messages.info(request, "Your cart is empty.")
+                return redirect('product-list')
+
+            # Step 3: Calculate total price
+            total_price = sum(item.product.price * item.quantity for item in cart_items if item.product is not None)
+            print("DEBUG: Total cart value:", total_price)
+
+            # Step 4: Render cart checkout page
+            context = {
+                'cart_items': cart_items,
+                'consumer': current_consumer,
+                'total_price': total_price
+            }
+            return render(request, 'payments/cart_check-out.html', context)
 
         except Exception as e:
-            logging.error(f"Error creating/getting Payment for cart: {e}", exc_info=True)
-            messages.error(request, 'An error occurred while preparing your payment. Please try again.')
-            return redirect('cart-view')
-
-        # Create a new transaction for this payment attempt
-        transaction = Transactions.objects.create(payment=payment)
-
-        client = razorpay.Client(auth=(config("RZP_CLIENT_ID"), config("RZP_CLIENT_SECRET")))
-
-        order_data = {
-            "amount": int(payment.amount * 100),  # amount in paise
-            "currency": "INR",
-            "receipt": f"order_rcptid_{transaction.id}",
-        }
-
-        try:
-            order = client.order.create(data=order_data)
-            rzp_order_id = order.get('id')
-        except Exception as e:
-            logging.error(f"Error creating Razorpay order: {e}", exc_info=True)
-            messages.error(request, 'Failed to create payment order. Please try again later.')
-            transaction.status = 'Failed'
-            transaction.save()
-            return redirect('cart-view')
-
-        transaction.rzp_order_id = rzp_order_id
-        transaction.save()
-
-        context = {
-            'client_id': config("RZP_CLIENT_ID"),
-            'rzp_order_id': rzp_order_id,
-            'amount': int(payment.amount * 100),
-            'product': None, # No specific product for cart-wide payment
-            'payment': payment,
-            'consumer_email': request.user.email, # For Razorpay prefill
-            'consumer_phone': consumer.phone # Assuming Consumer model has a phone field
-        }
-        return render(request, 'payments/payment-page.html', context) # Reuse payment-page.html
-
+            print("DEBUG: Exception:", e)
+            messages.error(request, f"Unexpected error occurred: {e}")
+            return redirect('product-list')
