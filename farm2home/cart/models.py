@@ -4,13 +4,10 @@ from django.db import models
 
 from consumer.models import Consumer
 
-from marketplace.models import Product
+from marketplace.models import Product,BaseClass
 
-import uuid
 
-class Cart(models.Model):
-
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+class Cart(BaseClass):
 
     user = models.ForeignKey(Consumer, on_delete=models.CASCADE)
 

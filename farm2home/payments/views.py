@@ -39,16 +39,15 @@ class EnrollConfirmationView(View):
 
 
 class RazorpayView(View):
-    """
-    Generates Razorpay order and renders payment page with order details.
-    """
-
     def get(self, request, *args, **kwargs):
-        product_uuid = kwargs.get('uuid')
+        cart_uuid = kwargs.get('uuid')
+        
         try:
-            product = Product.objects.get(uuid=product_uuid)
-        except Product.DoesNotExist:
-            raise Http404("Product not found")
+            cart = Cart.objects.get(uuid=cart_uuid)
+        except Cart.DoesNotExist:
+            raise Http404("Cart not found")
+
+        product = cart.product
 
         try:
             consumer = Consumer.objects.get(profile=request.user)
@@ -56,37 +55,34 @@ class RazorpayView(View):
             raise Http404("Consumer not found")
 
         try:
-            payment = Payments.objects.get(consumer=consumer, product=product)
+            payment, created = Payments.objects.get_or_create(consumer=consumer,product=product,defaults={'amount': product.price} ) # or cart.product.price)
         except Payments.DoesNotExist:
             raise Http404("Payment record not found")
 
-        # Create a new transaction for this payment attempt
+        # Create transaction
         transaction = Transactions.objects.create(payment=payment)
 
         client = razorpay.Client(auth=(config("RZP_CLIENT_ID"), config("RZP_CLIENT_SECRET")))
 
         order_data = {
-            "amount": int(payment.amount * 100),  # amount in paise
+            "amount": int(payment.amount * 100),
             "currency": "INR",
             "receipt": f"order_rcptid_{transaction.id}",
         }
 
         order = client.order.create(data=order_data)
-        rzp_order_id = order.get('id')
-
-        transaction.rzp_order_id = rzp_order_id
+        transaction.rzp_order_id = order.get('id')
         transaction.save()
 
         context = {
             'client_id': config("RZP_CLIENT_ID"),
-            'rzp_order_id': rzp_order_id,
+            'rzp_order_id': transaction.rzp_order_id,
             'amount': int(payment.amount * 100),
             'product': product,
             'payment': payment,
         }
 
         return render(request, 'payments/payment-page.html', context)
-
 
 class PaymentverifyView(View):
     """
