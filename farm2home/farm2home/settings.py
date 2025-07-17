@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'payments',
     'cart',
     'ai_quality',
+    'rating',
     
 ]
 
