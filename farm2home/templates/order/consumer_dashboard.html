@@ -1,0 +1,51 @@
+<!-- consumer/dashboard.html -->
+
+{% extends 'base.html' %}
+{% block section %}
+<div class="container py-4">
+    <h2>Welcome, {{ user.first_name }}</h2>
+    <h4 class="mb-4">Your Orders</h4>
+
+    {% if orders %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for order in orders %}
+            <div class="col">
+                <div class="card shadow rounded-4 p-3">
+                    <div class="row g-2 align-items-center">
+                        <!-- Product Image -->
+                        <div class="col-4">
+                            <img src="{{ order.product.image.url }}" alt="{{ order.product.product_name }}"
+                                 class="img-fluid rounded">
+                        </div>
+
+                        <!-- Product Details -->
+                        <div class="col-8">
+                            <h5 class="card-title mb-1">{{ order.product.product_name }}</h5>
+                            <p class="mb-1">Qty: {{ order.quantity }}</p>
+                            <p class="mb-1 text-muted">Expected Delivery: 
+                                <strong>{{ order.expected_delivery }}</strong>
+                            </p>
+
+                            <!-- Order Status -->
+                            <div>
+                                {% if order.status == 'ordered' %}
+                                    <span class="badge bg-primary">Ordered</span>
+                                {% elif order.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% elif order.status == 'shipped' %}
+                                    <span class="badge bg-info text-dark">Shipped</span>
+                                {% elif order.status == 'delivered' %}
+                                    <span class="badge bg-success">Delivered</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No orders found.</p>
+    {% endif %}
+</div>
+{% endblock %}

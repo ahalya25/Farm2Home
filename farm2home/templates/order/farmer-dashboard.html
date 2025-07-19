@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block section %}
+
+<div class="container py-4">
+    <h2>Hello, {{ user.first_name }}!</h2>
+    <h4 class="mb-4">Orders for Your Products</h4>
+
+    {% if orders %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for order in orders %}
+            <div class="col">
+                <div class="card shadow rounded-4 p-3">
+                    <div class="row g-2 align-items-center">
+
+                        <!-- Product Image -->
+                        <div class="col-4">
+                            <img src="{{ order.product.image.url }}" alt="{{ order.product_name }}"
+                                 class="img-fluid rounded">
+                        </div>
+
+                        <!-- Order Info -->
+                        <div class="col-8">
+                            <h5 class="card-title mb-1">{{ order.product.product_name }}</h5>
+                            <p class="mb-1"><strong>Ordered by:</strong> {{ order.consumer.first_name }}</p>
+                            <p class="mb-1"><strong>Quantity:</strong> {{ order.quantity }}</p>
+                            <p class="mb-1 text-muted">Ordered At: {{ order.ordered_at|date:"d M Y, H:i" }}</p>
+                            <p class="mb-1 text-muted">Expected Delivery: {{ order.expected_delivery }}</p>
+
+                            <!-- Order Status -->
+                            <div>
+                                {% if order.status == 'ordered' %}
+                                    <span class="badge bg-primary">Ordered</span>
+                                {% elif order.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% elif order.status == 'shipped' %}
+                                    <span class="badge bg-info text-dark">Shipped</span>
+                                {% elif order.status == 'delivered' %}
+                                    <span class="badge bg-success">Delivered</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Optional: Add status update form/buttons here -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No orders found for your products.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

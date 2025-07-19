@@ -99,8 +99,19 @@
                   </div>
                 {% endif %}
                          
-                    </div>
-                        <a href="contact.html" class="nav-item nav-link">CONTACT</a>
+                    
+<nav class="navbar navbar-expand-lg ">
+  <!-- other nav content -->
+  <ul class="navbar-nav ml-auto">
+    {% if request.user.is_authenticated %}
+      {% if request.user.consumer %}
+      <li class="nav-item"><a href="{% url 'consumer_dashboard' %}" class="nav-link">ORDERS</a></li>
+      {% elif request.user.farmer %}
+      <li class="nav-item"><a href="{% url 'farmer-dashboard' %}" class="nav-link">ORDERS</a></li>
+      {% endif %}
+    {% endif %}
+  </ul>
+</nav>
 
                 <!-- cart -->
                  
@@ -108,10 +119,10 @@
                 <a class="nav-link position-relative" href="{% url 'cart-page' %} ">
                <i class="fas fa-shopping-cart fa-lg"></i>
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-             {{ cart_count|default:"0" }}
+             {{ cart_count|default:"1" }}
         </span>
      </a>
- </li>
+ 
 
                     </div>
                     <a href="{% url 'register-choices' %}" class="btn btn-primary py-2 px-4">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
