@@ -55,11 +55,11 @@
                     <p class="text-muted">Please confirm your address before making the payment.</p>
 
                     <!-- Razorpay Payment -->
-                    {% if cart_items.0 %}
-                        <a href="{% url 'razorpay-view' uuid=cart_items.0.uuid %}" class="btn btn-success w-100 mb-2">
-                     Proceed to Payment
+                  
+                    <a href="{% url 'razorpay-view' %}" class="btn btn-success w-100 mb-2">
+                        Proceed to Payment
                     </a>
-                    {% endif %}
+
 
                     <!-- Update Cart Option -->
                     <a href="{% url 'cart_check-out' %}" class="btn btn-outline-secondary w-100">

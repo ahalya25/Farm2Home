@@ -16,7 +16,7 @@ class Payments(BaseClass):
 
     consumer = models.ForeignKey('consumer.Consumer',on_delete=models.CASCADE)
 
-    product = models.ForeignKey('marketplace.Product',on_delete=models.CASCADE)
+    product = models.ForeignKey('marketplace.Product', on_delete=models.CASCADE, null=True, blank=True)
 
     amount = models.FloatField()
 
@@ -26,8 +26,9 @@ class Payments(BaseClass):
 
     def __str__(self):
 
-        return f'{self.consumer.consumer_name}--{self.product.product_name}--{self.amount}'
-    
+        product_name = self.product.product_name if self.product else "Cart"
+        return f'{self.consumer.consumer_name}--{product_name}--{self.amount}'
+
     class Meta :
 
         verbose_name = 'Payments'
@@ -50,8 +51,10 @@ class Transactions(BaseClass):
     rzp_payment_signature = models.TextField(null=True,blank=True)
 
     def __str__(self):
+        
+        product_name = self.payment.product.product_name if self.payment.product else "Cart"
+        return f'{self.payment.consumer.consumer_name}--{product_name}--Transaction'    
 
-        return f'{self.payment.consumer.consumer_name}--{self.payment.product.product_name}--Transaction'
 
     
     class Meta:
