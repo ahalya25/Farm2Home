@@ -21,6 +21,7 @@ class Cart(BaseClass):
 
         return f"{self.product.product_name} - {self.user.consumer_name}"
     
+    
     class Meta:
 
         verbose_name = 'Cart'

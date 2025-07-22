@@ -35,27 +35,26 @@
                             <button type="submit" class="btn btn-sm btn-success">+</button>
                         </form>
                     </td>
-                    <td>₹{{ item.product.price }}</td>
+                    {# This line is corrected to display the effective unit price #}
+                    <td>₹{% if item.product.offer_price %}{{ item.product.offer_price|floatformat:2 }}{% else %}{{ item.product.price|floatformat:2 }}{% endif %}</td>
                     <td>₹{{ item.total_price|floatformat:2 }}</td>
 
                 </tr>
                 {% endfor %}
                 <tr class="table-success">
                     <td colspan="4" class="text-end"><strong>Total Price:</strong></td>
-                    <td><strong>₹{{ total_price }}</strong></td>
+                    <td><strong>₹{{ total_price|floatformat:2 }}</strong></td> {# Added floatformat for consistency #}
                 </tr>
             </tbody>
         </table>
 
-       {% if user.is_authenticated and user.role != 'Farmer' %}
+        {% if user.is_authenticated and user.role != 'Farmer' %}
     <a href="{% url 'cart_check-out' %}" class="btn btn-warning">
         <i class="fas fa-shopping-cart me-1"></i>Buy Now
     </a>
 {% endif %}
 
 
-
-         
     {% else %}
         <p class="text-center text-muted">Your cart is empty.</p>
     {% endif %}

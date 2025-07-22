@@ -19,10 +19,12 @@ from django.urls import path,include
 
 from django.conf.urls.static import static
 from django.conf import settings
+from marketplace import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',views.ProductListView.as_view(),name='product-list'),
     path('marketplace/',include('marketplace.urls')),
     path('authentication/',include('authentication.urls')),
     path('farmer/',include('farmer.urls')),
