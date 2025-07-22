@@ -108,7 +108,7 @@
       <li class="nav-item"><a href="{% url 'consumer_dashboard' %}" class="nav-link">ORDERS</a></li>
       {% elif request.user.farmer %}
       <li class="nav-item"><a href="{% url 'farmer-dashboard' %}" class="nav-link">ORDERS</a></li>
-      {% endif %}
+      {% endif %} 
     {% endif %}
   </ul>
 </nav>
@@ -116,10 +116,12 @@
                 <!-- cart -->
                  
                         <li class="nav-item">
+                             {% if request.user.consumer %}
                 <a class="nav-link position-relative" href="{% url 'cart-page' %} ">
                <i class="fas fa-shopping-cart fa-lg"></i>
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
              {{ cart_count|default:"1" }}
+             {% endif %}
         </span>
      </a>
  
