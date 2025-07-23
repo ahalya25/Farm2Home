@@ -27,39 +27,39 @@
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-danger">–</button>
                         </form>
-
                         <span class="mx-2">{{ item.quantity }}</span>
-
                         <form method="POST" action="{% url 'cart-increase' item.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-success">+</button>
                         </form>
                     </td>
-                    {# This line is corrected to display the effective unit price #}
-                    <td>₹{% if item.product.offer_price %}{{ item.product.offer_price|floatformat:2 }}{% else %}{{ item.product.price|floatformat:2 }}{% endif %}</td>
-                    <td>₹{{ item.total_price|floatformat:2 }}</td>
-
+                    <td>
+                        ₹{{ item.product.offer_price|default:item.product.price }}
+                    </td>
+                    <td>
+                        ₹{{ item.total_price|floatformat:2 }}
+                    </td>
                 </tr>
                 {% endfor %}
                 <tr class="table-success">
                     <td colspan="4" class="text-end"><strong>Total Price:</strong></td>
-                    <td><strong>₹{{ total_price|floatformat:2 }}</strong></td> {# Added floatformat for consistency #}
+                    <td><strong>₹{{ total_price|floatformat:2 }}</strong></td>
                 </tr>
             </tbody>
         </table>
 
         {% if user.is_authenticated and user.role != 'Farmer' %}
-    <a href="{% url 'cart_check-out' %}" class="btn btn-warning">
-        <i class="fas fa-shopping-cart me-1"></i>Buy Now
-    </a>
-{% endif %}
-
+            <a href="{% url 'cart_check-out' %}" class="btn btn-warning">
+                <i class="fas fa-shopping-cart me-1"></i>Buy Now
+            </a>
+        {% endif %}
 
     {% else %}
         <p class="text-center text-muted">Your cart is empty.</p>
     {% endif %}
+    
     <a href="{% url 'product-list' %}" class="btn btn-secondary mb-3">
-    ← Back to Products
-</a>
+        ← Back to Products
+    </a>
 </div>
 {% endblock %}

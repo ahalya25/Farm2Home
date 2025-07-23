@@ -20,6 +20,12 @@ class Cart(BaseClass):
     def __str__(self):
 
         return f"{self.product.product_name} - {self.user.consumer_name}"
+
+    @property
+    def total_price(self):
+        price = self.product.offer_price if self.product.offer_price else self.product.price
+        return price * self.quantity
+    
     
     
     class Meta:

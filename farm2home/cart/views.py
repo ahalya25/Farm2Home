@@ -23,18 +23,14 @@ class AddToCartView(LoginRequiredMixin, View):
             cart_item.save()
 
         return redirect('cart-page')  
-
-
 class CartDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         profile = request.user
         consumer = get_object_or_404(Consumer, profile=profile)
+
         cart_items = Cart.objects.filter(user=consumer)
 
-        # Add a total_price attribute on each cart item
-        for item in cart_items:
-            item.total_price = item.product.price * item.quantity
-
+        # ✅ Don't assign to item.total_price (it's a property)
         total_price = sum(item.total_price for item in cart_items)
 
         context = {
