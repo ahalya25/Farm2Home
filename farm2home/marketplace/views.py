@@ -2,27 +2,16 @@ from django.shortcuts import render,redirect
 
 # Create your views here.
 from django.views import View
-
 from .models import Product
-
 from .forms import ProductAddForm
-
 from django.contrib import messages
-
 from farmer.models import Farmer
-
 from django.db.models import Q
-
 from django.contrib.auth.decorators import login_required 
-
 from django.utils.decorators import method_decorator
-
 from authentication.permissions import permission_roles
-
 from .forms import ProductAddForm
-
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from django.views.generic import CreateView
 from ai_quality.predict import predict_freshness
 from django.conf import settings
@@ -53,6 +42,7 @@ class ProductListView(View):
         data = {'products': product, 'page': 'product-page', 'query': query}
 
         return render(request,'marketplace/product-list.html', context=data)
+    
 
 class HomeView(View):
 
@@ -138,7 +128,7 @@ class ProductAddView(View):
             return render(request, 'marketplace/product-add.html', {'form': form})
 
 
-# @method_decorator(login_required(login_url='login'),name='dispatch')  
+@method_decorator(login_required(login_url='login'),name='dispatch')  
 class ProductDetailView(View):
 
     def get(self,request,*args,**kwargs):

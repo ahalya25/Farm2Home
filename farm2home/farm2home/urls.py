@@ -32,7 +32,8 @@ urlpatterns = [
     path('payments/',include('payments.urls')),
     path('cart/', include('cart.urls')),
     path('ai_quality/', include('ai_quality.urls')),
-    # path('ratings/', include('rating.urls')),
+    
+    # path('rating/', include('rating.urls')),
     path('order/',include('order.urls')),
 
 

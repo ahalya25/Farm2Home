@@ -37,6 +37,9 @@
                     <h5>Cart Total:</h5>
                     <h4>₹{{ total_price|floatformat:2 }}</h4>
                 </div>
+                  <a href="{% url 'product-list' %}" class="btn btn-secondary mb-3">
+                   ← Back to Products
+                 </a>
             </div>
         </div>
 
@@ -53,6 +56,7 @@
                     <p><strong>Email:</strong> {{ consumer.email }}</p>
                     <hr>
                     <p class="text-muted">Please confirm your address before making the payment.</p>
+                    
 
                     <!-- Razorpay Payment -->
                   

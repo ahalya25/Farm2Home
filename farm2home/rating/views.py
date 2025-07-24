@@ -12,7 +12,7 @@
 #     def get(self, request, product_id):
 #         product = get_object_or_404(Product, id=product_id)
 #         form = ProductReviewForm()
-#         return render(request, 'rating/add_review.html', {'form': form, 'product': product})
+#         return render(request, 'rating/add-review.html', {'form': form, 'product': product})
 
 #     def post(self, request, product_id):
 #         product = get_object_or_404(Product, id=product_id)
@@ -23,4 +23,4 @@
 #             review.consumer = request.user
 #             review.save()
 #             return redirect('product-detail', pk=product.id)
-#         return render(request, 'rating/add_review.html', {'form': form, 'product': product})
+#         return render(request, 'rating/add-review.html', {'form': form, 'product': product})

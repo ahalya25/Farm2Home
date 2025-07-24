@@ -4,8 +4,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from consumer.models import Consumer
 from marketplace.models import Product
 from .models import Cart
+from django.contrib.auth.decorators import login_required 
+from django.utils.decorators import method_decorator
 
 
+@method_decorator(login_required(login_url='login'),name='dispatch') 
 class AddToCartView(LoginRequiredMixin, View):
     def post(self, request, uuid, *args, **kwargs):
         product = get_object_or_404(Product, uuid=uuid)
@@ -23,6 +26,8 @@ class AddToCartView(LoginRequiredMixin, View):
             cart_item.save()
 
         return redirect('cart-page')  
+    
+
 class CartDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         profile = request.user
@@ -39,6 +44,7 @@ class CartDetailView(LoginRequiredMixin, View):
         }
         return render(request, 'cart/cart_detail.html', context)
 
+
     
 class IncreaseQuantityView(LoginRequiredMixin, View):
     def post(self, request, cart_id):
@@ -46,6 +52,8 @@ class IncreaseQuantityView(LoginRequiredMixin, View):
         cart_item.quantity += 1
         cart_item.save()
         return redirect('cart-page')
+
+
 
 class DecreaseQuantityView(LoginRequiredMixin, View):
     def post(self, request, cart_id):
